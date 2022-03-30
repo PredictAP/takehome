@@ -2,14 +2,38 @@
 
 Challenge: A directory contains multiple files and directories of non-uniform file and directory names. Create a program that traverses a base directory and creates an index file that can be used to quickly lookup files by name, size, and content type.
 
-# Instructions
+# Usage
 
-Fork this repository and implement the above requirements. The result must be an application that implements both the index and search features. Use your best judgement as to the interface that is used to use the index and search features, but remember that this is meant to create a dialog during the interview process, not be something that would be used in production.
+1. Optionally, create a new virtual environment:
+```
+python3 -m venv .venv
+source .venv/bin/activate
+```
+2. Install pandas:
+```
+pip install pandas
+```
+3. Create index file:
+```
+python index.py <source folder> <destination file>
+Example:
+python index.py test_data file_list.json
+```
 
-Feel free to use the language, libraries, and tools that you are most comfortable in and best reflect your ability to translate requirements into a functional implementation.
+### How to Search
+```
+python search.py [optional arguments] <index file>
+```
 
-Once the project is implemented, remove the `# Instructions` section of this readme and add the section `# Usage` with instructions on how to run the produced application.
+Optional arguments:
+- `-n <name>` Searches for file records with a name containing *name*
+- `-e <extension>` Searches for file records by extension
+- `-l <size>` Searches for files smaller than *size*
+- `-g <size>` Searches for files larger than *size*
 
-The `test_data` directory in this project contains files and directories that can be used to test your implementation.
-
-Good luck.
+Examples:
+```
+python search.py -n sample file_list.json
+python search.py -e jpg -g 10000 file_list.json
+python search.py -n user file_list.json
+```
