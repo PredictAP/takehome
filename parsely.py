@@ -2,6 +2,10 @@ import os
 import json
 
 
+INDEX_FILENAME = "parsely_index.json"
+FILESIZE_FUZZ_FACTOR = 0.1
+
+
 def build_index(directory, files=[]):
     with os.scandir(directory) as items:
         for item in items:
@@ -21,20 +25,73 @@ def build_index(directory, files=[]):
 
 
 def persist_index(index):
-    with open("parsely_index.json", "w") as file:
+    with open(INDEX_FILENAME, "w") as file:
         json.dump(index, file)
+
+
+def load_index():
+    with open(INDEX_FILENAME, "r") as file:
+        index = json.load(file)
+
+    return index
 
 
 def index(args):
     persist_index(build_index(args.directory))
 
 
+def search_filename(name, filtered):
+    return [file for file in filtered if file["name"].find(name) != -1]
+
+
+def search_filesize(size, scale, filtered):
+    if scale != "B" and scale != "K" and scale != "M" and scale != "G":
+        print(
+            "Invalid scale provided. Please try again with one of the "
+            + "following: B for bytes, K for kilobytes, M for megabytes, and G "
+            + "for gigabytes."
+        )
+        return
+
+    scale_table = {"B": 1, "K": 1000, "M": 1000000, "G": 1000000000}
+    size_query = size * scale_table[scale]
+    floor = size_query - (size_query * FILESIZE_FUZZ_FACTOR)
+    ceiling = size_query + (size_query * FILESIZE_FUZZ_FACTOR)
+
+    return [
+        file for file in filtered if file["size"] >= floor and file["size"] <= ceiling
+    ]
+
+
+def search_filetype(type, filtered):
+    return [file for file in filtered if file["type"] == type]
+
+
+def print_results(filtered):
+    print(filtered)
+
+
 def search(args):
     if args.name == None and args.size == None and args.type == None:
+        print("Specify at least one search function and corresponding criteria.")
+    if not os.path.isfile(INDEX_FILENAME):
         print(
-            """Specify at least one search function and corresponding criteria.
-            """
+            "There is no existing index file. Run this program with the index "
+            + "command and try your search again."
         )
+
+    filtered = load_index()
+
+    if args.name != None:
+        filtered = search_filename(args.name, filtered)
+
+    if args.size != None:
+        filtered = search_filesize(int(args.size[0]), args.size[1], filtered)
+
+    if args.type != None:
+        filtered = search_filetype(args.type, filtered)
+
+    print_results(filtered)
 
 
 def build_parser():
