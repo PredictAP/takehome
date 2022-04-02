@@ -68,7 +68,12 @@ def search_filetype(type, filtered):
 
 
 def print_results(filtered):
-    print(filtered)
+    if len(filtered) == 0:
+        print("No results found for the given search query.")
+    else:
+        print("Found the following result(s) from the given search query.")
+        for item in filtered:
+            print(f"{item['name']}.{item['type']} located at {item['path']}")
 
 
 def search(args):
