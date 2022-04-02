@@ -1,14 +1,43 @@
+import os
+import json
+
+
+def build_index(directory, files=[]):
+    with os.scandir(directory) as items:
+        for item in items:
+            if item.is_dir():
+                build_index(item.path, files)
+            else:
+                files.append(
+                    {
+                        "path": os.path.abspath(item.path),
+                        "name": item.name.split(".")[0],
+                        "size": item.stat().st_size,
+                        "type": item.name.split(".")[1],
+                    }
+                )
+
+    return files
+
+
+def persist_index(index):
+    with open("parsely_index.json", "w") as file:
+        json.dump(index, file)
+
+
 def index(args):
-    pass
+    persist_index(build_index(args.directory))
 
 
 def search(args):
     if args.name == None and args.size == None and args.type == None:
-        print("Specify at least one search function and corresponding criteria.")
+        print(
+            """Specify at least one search function and corresponding criteria.
+            """
+        )
 
 
 def build_parser():
-    import os
     import argparse
 
     parser = argparse.ArgumentParser(
@@ -16,18 +45,22 @@ def build_parser():
     )
     subparsers = parser.add_subparsers(required=True)
 
-    index_parser = subparsers.add_parser("index", help="Index a directory tree.")
+    index_parser = subparsers.add_parser(
+        "index",
+        help="""Index a directory tree.""",
+    )
     index_parser.add_argument(
         "directory",
-        nargs="?",
         metavar="DIRECTORY",
-        default=os.getcwd(),
-        help="""Index the given directory. If no argument is supplied, will 
-        index the current working directory.""",
+        help="""Index the given directory. Must supply a directory path as a 
+        positional argument.""",
     )
     index_parser.set_defaults(func=index)
 
-    search_parser = subparsers.add_parser("search", help="Perform a search query.")
+    search_parser = subparsers.add_parser(
+        "search",
+        help="""Perform a search query.""",
+    )
     search_parser.add_argument(
         "-n",
         "--name",
