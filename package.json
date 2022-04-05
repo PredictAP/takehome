@@ -1,0 +1,29 @@
+{
+  "name": "takehome",
+  "version": "1.0.0",
+  "description": "Challenge: A directory contains multiple files and directories of non-uniform file and directory names. Create a program that traverses a base directory and creates an index file that can be used to quickly lookup files by name, size, and content type.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ckendig/takehome.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ckendig/takehome/issues"
+  },
+  "homepage": "https://github.com/ckendig/takehome#readme",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "fs": "^0.0.1-security",
+    "nodemon": "^2.0.15",
+    "path": "^0.12.7"
+  }
+}
