@@ -16,6 +16,9 @@ This challenge was developed utilizing Node.js and set up as an API.  Please fol
 ```
 6. In your terminal window on the root directory of the project run ``` npm run dev ```.  This will run the project with Nodemon to port 8080.  If Port 8080 is currently in use, update your .env file with a different port that is not in use.
 
+## Make Sure Server is Running Locally
+Once you have done ``` npm run dev ```, open your web browser and type in http://localhost:8080 (or whatever port number you are using) and then add ``` /test ``` to the end of the url.  This hits a test endpoint to make sure you are receiving something back properly.  You should reveive back a message on the browser that states, "Server is working properly".
+
 ## Using This Feature
 Once you have the environment running locally, navigate to http://localhost:8080 in any web browser.  You can search for a file in 1 of 4 ways (I added one since I wanted to see it in the object): File Name, File Directory, File Size, and Content Type.  This is currently designed to just take 1 query parameter at a time right now for simplicity of the project, but this is how you will use it.
 
